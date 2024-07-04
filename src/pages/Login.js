@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Facebook, GitHub, Mail, Twitter } from "react-feather";
 
 // Core Imports
-import { useLogin } from "../core/services/api/auth/useLogin";
+import { useLogin } from "../core/services/api/auth/useLogin.api";
 import { getItem } from "../core/services/common/storage.services";
 import { loginFormSchema } from "../core/validations/login-form.validation";
 

@@ -10,7 +10,7 @@ import { onDashboardReportChange } from "../redux/dashboardReport";
 import CardMedal from "../@core/components/CardMedal";
 import ChartJS from "../@core/components/ChartjsDoughnutChart";
 import StatsCard from "../@core/components/StatsCard";
-import { useDashboardReport } from "../core/services/api/dashboard/useDashboardReport";
+import { useDashboardReport } from "../core/services/api/dashboard/useDashboardReport.api";
 
 const Home = () => {
   // ** Hooks

@@ -1,9 +1,8 @@
 // ** React Imports
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
@@ -24,7 +23,7 @@ import {
 } from "reactstrap";
 
 // ** Core Imports
-import { createUserAPI } from "../core/services/api/user/create-user.api";
+import { useCreateUser } from "../core/services/api/user/useCreateUser.api";
 import { createUserFormSchema } from "../core/validations/create-user-form.validation";
 
 // ** Styles
@@ -45,46 +44,36 @@ const CreateUserPage = () => {
   } = useForm({
     resolver: yupResolver(createUserFormSchema),
   });
-  const navigate = useNavigate();
+  const createUser = useCreateUser();
 
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const {
-        firstName,
+    const {
+      firstName,
+      lastName,
+      gmail,
+      password,
+      phoneNumber,
+      isStudent,
+      isTeacher,
+    } = data;
+
+    createUser.mutate(
+      {
         lastName,
+        firstName,
         gmail,
         password,
         phoneNumber,
-        isStudent,
-        isTeacher,
-      } = data;
-
-      const createUser = await createUserAPI(
-        lastName,
-        firstName,
-        gmail,
-        password,
-        phoneNumber,
-        !!isStudent,
-        !!isTeacher
-      );
-
-      if (createUser.success) {
-        toast.success("کاربر با موفقیت ایجاد شد !");
-
-        navigate("/users");
-      } else {
-        toast.error("مشکلی در افزودن کاربر به وجود آمد !");
+        isStudent: !!isStudent,
+        isTeacher: !!isTeacher,
+      },
+      {
+        onSuccess: () => setLoading(false),
+        onError: () => setLoading(false),
       }
-    } catch (error) {
-      setLoading(false);
-
-      toast.error("مشکلی در افزودن کاربر به وجود آمد !");
-    } finally {
-      setLoading(false);
-    }
+    );
   };
 
   return (
@@ -217,11 +206,7 @@ const CreateUserPage = () => {
                           name="isStudent"
                           control={control}
                           render={({ field }) => (
-                            <Input
-                              type="checkbox"
-                              id="primary-checkbox"
-                              {...field}
-                            />
+                            <Input type="checkbox" id="isStudent" {...field} />
                           )}
                         />
                         <Label
@@ -237,11 +222,7 @@ const CreateUserPage = () => {
                           name="isTeacher"
                           control={control}
                           render={({ field }) => (
-                            <Input
-                              type="checkbox"
-                              id="primary-checkbox"
-                              {...field}
-                            />
+                            <Input type="checkbox" id="isTeacher" {...field} />
                           )}
                         />
                         <Label className="form-check-label" for="isTeacher">

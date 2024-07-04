@@ -21,7 +21,7 @@ import {
 } from "reactstrap";
 
 // ** Core Imports
-import { useProfileInfo } from "../../../../core/services/api/user-panel/useProfileInfo";
+import { useProfileInfo } from "../../../../core/services/api/user-panel/useProfileInfo.api";
 import { removeItem } from "../../../../core/services/common/storage.services";
 
 // ** Default Avatar Image
