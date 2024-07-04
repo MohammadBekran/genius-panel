@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import blankThumbnail from "../../../../assets/images/common/blank-thumbnail.jpg";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getUserWithIdAPI } from "../../../../core/services/api/user/get-user-with-id.api";
+import { getUserWithIdAPI } from "../../../../core/services/api/user/useUserWithId";
 import { Badge } from "reactstrap";
 
 export const COURSE_USER_LIST_COLUMNS = [

@@ -11,7 +11,7 @@ import { useAddUserAccess } from "../../../core/services/api/user/useAddUserAcce
 // ** Utils
 import { selectThemeColors } from "../../../utility/Utils";
 
-const UserAddRole = ({ modal, id, toggleModal, userRoles }) => {
+const UserAddRole = ({ modal, id, toggleModal, userRoles, isUserDetails }) => {
   // ** States
   const [role, setRole] = useState();
 
@@ -21,7 +21,9 @@ const UserAddRole = ({ modal, id, toggleModal, userRoles }) => {
   const animatedComponents = makeAnimated();
 
   const handleAddRole = async () => {
-    const convertedUserRoles = userRoles.split(",").map((role) => role.trim());
+    const convertedUserRoles = isUserDetails
+      ? userRoles.map((user) => user.roleName)
+      : userRoles.split(",").map((role) => role.trim());
 
     const handleEnable = convertedUserRoles.includes(role.role);
 
@@ -60,7 +62,7 @@ const UserAddRole = ({ modal, id, toggleModal, userRoles }) => {
           disabled={!role}
           onClick={handleAddRole}
         >
-          افزودن نقش
+          تغییر نقش
         </Button>
       </ModalBody>
     </Modal>

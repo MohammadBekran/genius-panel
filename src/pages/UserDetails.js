@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 // ** Reactstrap Imports
@@ -10,34 +10,18 @@ import UserTabs from "../@core/components/UserDetails/Tabs";
 import UserInfoCard from "../@core/components/UserDetails/UserInfoCard";
 
 // ** Core Imports
-import { getUserWithIdAPI } from "../core/services/api/user/get-user-with-id.api";
+import { useUserWithId } from "../core/services/api/user/useUserWithId";
 
 // ** Styles
 import "@styles/react/apps/app-users.scss";
 
 const UserDetailsPage = () => {
   // ** States
-  const [user, setUser] = useState();
+  const [active, setActive] = useState("1");
 
   // ** Hooks
   const { id } = useParams();
-
-  // ** Get suer on mount
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const getUser = await getUserWithIdAPI(id);
-
-        setUser(getUser);
-      } catch (error) {
-        toast.error("مشکلی در دریافت اطلاعات کاربر به وجود آمد !");
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const [active, setActive] = useState("1");
+  const { data: user } = useUserWithId(id);
 
   const toggleTab = (tab) => {
     if (active !== tab) {

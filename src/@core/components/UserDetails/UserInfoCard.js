@@ -1,7 +1,6 @@
 // ** React Imports
 import { useState, Fragment } from "react";
-import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // ** Reactstrap Imports
 import { Badge, Button, Card, CardBody } from "reactstrap";
@@ -16,7 +15,7 @@ import Avatar from "@components/avatar";
 import UserAddRole from "../UserAddRole";
 
 // ** Core Imports
-import { deleteUserAPI } from "../../../core/services/api/user/useDeleteUser.api";
+import { useDeleteUser } from "../../../core/services/api/user/useDeleteUser.api";
 
 // ** Utils
 import { convertDateToPersian } from "../../../utility/date-helper.utils";
@@ -38,7 +37,7 @@ const UserInfoCard = ({ user }) => {
 
   // ** Hooks
   const { id } = useParams();
-  const navigate = useNavigate();
+  const deleteUser = useDeleteUser(id);
 
   // ** render user img
   const renderUserImg = () => {
@@ -91,20 +90,8 @@ const UserInfoCard = ({ user }) => {
       confirmButtonText: "بله، کاربر را حذف میکنم!",
       cancelButtonText: "انصراف",
       showLoaderOnConfirm: true,
-      async preConfirm() {
-        try {
-          const deleteUser = await deleteUserAPI(id);
-
-          if (deleteUser.success) {
-            toast.success("کاربر با موفقیت حذف شد !");
-
-            navigate("/users");
-          } else {
-            toast.error("مشکلی در حذف کاربر به وجود آمد !");
-          }
-        } catch (error) {
-          toast.error("مشکلی در حذف کاربر به وجود آمد !");
-        }
+      preConfirm() {
+        deleteUser.mutate();
       },
     });
   };
@@ -260,13 +247,15 @@ const UserInfoCard = ({ user }) => {
               </Button>
             </div>
             <Button color="success" outline onClick={handleAddRoleClick}>
-              افزودن نقش
+              تغییر نقش
             </Button>
             <UserAddRole
               modal={modal}
               id={id}
               toggleModal={toggleModal}
               redirectUrl={`/users/${id}`}
+              userRoles={user?.roles}
+              isUserDetails
             />
           </div>
         </CardBody>

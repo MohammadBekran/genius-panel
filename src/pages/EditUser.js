@@ -12,7 +12,7 @@ import GlobalData from "../@core/components/EditUser/steps/GlobalData";
 import UserConnection from "../@core/components/EditUser/steps/UserConnection";
 
 // ** Core Imports
-import { getUserWithIdAPI } from "../core/services/api/user/get-user-with-id.api";
+import { getUserWithIdAPI } from "../core/services/api/user/useUserWithId";
 import { updateUserAPI } from "../core/services/api/user/update-user.api";
 
 const EditUserPage = () => {

@@ -48,8 +48,8 @@ const Users = () => {
   const { data: userLists, isLoading } = useUserLists(
     currentPage,
     rowsOfPage,
-    sortType,
     sortingCol,
+    sortType,
     query,
     currentStatus.value === true ? true : undefined,
     currentStatus.value === false ? true : undefined,

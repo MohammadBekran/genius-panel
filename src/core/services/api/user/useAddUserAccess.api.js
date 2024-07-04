@@ -40,6 +40,9 @@ export const useAddUserAccess = (userId) => {
       queryClient.invalidateQueries({
         queryKey: ["userLists"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["userDetails"],
+      });
     },
     onError: () => dismissToast("addUserAccessLoading"),
   });

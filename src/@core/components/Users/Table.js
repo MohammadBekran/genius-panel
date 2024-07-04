@@ -239,27 +239,22 @@ const UsersListTable = ({
 
   // ** Table data to render
   const dataToRender = () => {
-    console.log(isLoading);
-    if (isLoading) {
-      return [{ label: "Loading ..." }];
+    const filters = {
+      role: currentRole.value,
+      status: currentStatus.value,
+      query,
+    };
+
+    const isFiltered = Object.keys(filters).some(function (k) {
+      return filters[k]?.length > 0;
+    });
+
+    if (users?.length > 0) {
+      return users;
+    } else if (users?.totalCount === 0 && isFiltered) {
+      return [];
     } else {
-      const filters = {
-        role: currentRole.value,
-        status: currentStatus.value,
-        query,
-      };
-
-      const isFiltered = Object.keys(filters).some(function (k) {
-        return filters[k]?.length > 0;
-      });
-
-      if (users?.length > 0) {
-        return users;
-      } else if (users?.totalCount === 0 && isFiltered) {
-        return [];
-      } else {
-        return users?.listUser?.slice(0, rowsOfPage);
-      }
+      return users?.listUser?.slice(0, rowsOfPage);
     }
   };
 
@@ -327,7 +322,11 @@ const UsersListTable = ({
                 users={users}
               />
             }
-            noDataComponent={<span className="my-2">کاربری پیدا نشد !</span>}
+            noDataComponent={
+              <span className="my-2">
+                {isLoading ? "در حال دریافت کاربران ..." : "کاربری پیدا نشد !"}
+              </span>
+            }
           />
         </div>
       </Card>

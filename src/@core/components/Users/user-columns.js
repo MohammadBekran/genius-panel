@@ -147,7 +147,7 @@ export const USER_COLUMNS = [
   },
   {
     name: "تاریخ",
-    minWidth: "130px",
+    minWidth: "140px",
     sortable: true,
     sortField: "insertDate",
     selector: (row) => row.billing,
@@ -159,7 +159,7 @@ export const USER_COLUMNS = [
   },
   {
     name: "وضعیت",
-    minWidth: "120px",
+    minWidth: "90px",
     sortable: true,
     sortField: "active",
     selector: (row) => row.active,
