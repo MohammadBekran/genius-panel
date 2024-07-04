@@ -3,10 +3,6 @@ import logo from "../assets/images/common/logo.svg";
 
 // You can customize the template with the help of this file
 
-const theme = localStorage.getItem("skin").includes("dark");
-
-console.log(theme);
-
 //Template config options
 const themeConfig = {
   app: {

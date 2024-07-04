@@ -1,6 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { Col, Row } from "reactstrap";
 
 // ** Redux Imports
@@ -11,29 +10,17 @@ import { onDashboardReportChange } from "../redux/dashboardReport";
 import CardMedal from "../@core/components/CardMedal";
 import ChartJS from "../@core/components/ChartjsDoughnutChart";
 import StatsCard from "../@core/components/StatsCard";
-import { dashboardReportAPI } from "../core/services/api/dashboard/dashboard-report.api";
+import { useDashboardReport } from "../core/services/api/dashboard/useDashboardReport";
 
 const Home = () => {
-  // ** States
-  const [dashboardReport, setDashboardReport] = useState();
-
   // ** Hooks
   const dispatch = useDispatch();
 
+  const { data: dashboardReport } = useDashboardReport();
+
   useEffect(() => {
-    const fetchDashboardReport = async () => {
-      try {
-        const getDashboardReport = await dashboardReportAPI();
-
-        dispatch(onDashboardReportChange(getDashboardReport));
-        setDashboardReport(getDashboardReport);
-      } catch (error) {
-        toast.error("مشکلی در دریافت اطلاعات داشبورد به وجود آمد !");
-      }
-    };
-
-    fetchDashboardReport();
-  }, []);
+    if (dashboardReport) dispatch(onDashboardReportChange(dashboardReport));
+  }, [dashboardReport]);
 
   return (
     <div id="dashboard-ecommerce">
