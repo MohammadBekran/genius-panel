@@ -1,7 +1,7 @@
 // ** React Imports
 import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // ** Reactstrap Imports
 import { Badge, Button, Card, CardBody } from "reactstrap";
@@ -20,8 +20,8 @@ import { persianNumberFormatter } from "../../../utility/persian-number-formatte
 
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss";
-import { handleDeleteCourse } from "../../../utility/delete-course-alert.utils";
-import { handleActiveInactiveCourse } from "../../../utility/active-inactive-course.utils";
+import { useHandleDeleteCourse } from "../../../utility/delete-course-alert.utils";
+import { useHandleActiveInactiveCourse } from "../../../utility/active-inactive-course.utils";
 
 const levelColors = {
   "فوق پیشرفته": "light-success",
@@ -41,7 +41,9 @@ const CourseInfoCard = ({ course }) => {
   const [isDeleted, setIsDeleted] = useState(false);
 
   // ** Hooks
-  const navigate = useNavigate();
+  const handleActiveInactiveCourse = useHandleActiveInactiveCourse();
+
+  const handleDeleteCourse = useHandleDeleteCourse();
 
   // ** Render course img
   const renderCourseImg = () => {
@@ -212,12 +214,7 @@ const CourseInfoCard = ({ course }) => {
                 color="success"
                 outline
                 onClick={() =>
-                  handleActiveInactiveCourse(
-                    course?.isActive,
-                    course?.courseId,
-                    navigate,
-                    `/courses/${course?.courseId}`
-                  )
+                  handleActiveInactiveCourse(course?.isActive, course?.courseId)
                 }
               >
                 {course?.isActive ? "غیر فعال کردن دوره" : "فعال کردن دوره"}

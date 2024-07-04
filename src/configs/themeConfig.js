@@ -1,7 +1,11 @@
 // Logo Import
-import logo from "@src/assets/images/logo/logo.svg";
+import logo from "../assets/images/common/icons8-student-80 1.svg";
 
 // You can customize the template with the help of this file
+
+const theme = localStorage.getItem("skin").includes("dark");
+
+console.log(theme);
 
 //Template config options
 const themeConfig = {

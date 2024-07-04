@@ -15,7 +15,7 @@ import Breadcrumbs from "@components/breadcrumbs";
 // ** Core Imports
 import { addCourseGroupAPI } from "../../../core/services/api/course/course-group/add-course-group.api";
 import { updateCourseGroupAPI } from "../../../core/services/api/course/course-group/update-course-group.api";
-import { getCourseListAPI } from "../../../core/services/api/course/get-course-list.api";
+import { useCourseList } from "../../../core/services/api/course/useCourseList";
 import { courseGroupFormSchema } from "../../../core/validations/course-group-form.validation";
 
 // ** Utils
@@ -66,6 +66,8 @@ const CourseGroupForm = ({ group }) => {
   });
   const navigate = useNavigate();
 
+  const { data: courseList } = useCourseList(1, 100000);
+
   const onSubmit = async (values) => {
     try {
       setLoading(true);
@@ -105,15 +107,9 @@ const CourseGroupForm = ({ group }) => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      try {
-        const getCourses = await getCourseListAPI(1, 100000);
+      const convertCourses = convertOptions(courseList.courseDtos);
 
-        const convertCourses = convertOptions(getCourses.courseDtos);
-
-        setCourses(convertCourses);
-      } catch (error) {
-        toast.error("مشکلی در دریافت دوره ها به وجود آمد !");
-      }
+      setCourses(convertCourses);
     };
 
     fetchCourses();

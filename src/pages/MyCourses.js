@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Imports
@@ -13,10 +12,10 @@ import { Book, BookOpen, CheckCircle, Trash2 } from "react-feather";
 import { COURSE_COLUMNS } from "../@core/components/course-columns";
 
 // ** Core Imports
-import { getCourseListAPI } from "../core/services/api/course/get-course-list.api";
+import { useCourseList } from "../core/services/api/course/useCourseList";
 
 // ** Utils
-import { handleDeleteCourse } from "../utility/delete-course.utils";
+import { useHandleDeleteCourse } from "../utility/delete-course.utils";
 
 // ** Custom Components
 import BreadCrumbs from "../@core/components/breadcrumbs";
@@ -35,6 +34,7 @@ const MyCoursesPages = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [searchText, setSearchText] = useState();
+  const [courses, setCourses] = useState();
   const [activeCourses, setActiveCourses] = useState();
   const [deletedCourses, setDeletedCourses] = useState();
   const [openCourses, setOpenCourses] = useState();
@@ -43,9 +43,34 @@ const MyCoursesPages = () => {
   const [isDeletedCourses, setIsDeletedCourses] = useState(false);
   const [isOpenCourses, setIsOpenCourses] = useState(false);
   const [selectedRows, setSelectedRows] = useState();
+  const [isDeletingCourses, setIsDeletingCourses] = useState(false);
 
   // ** Hooks
   const navigate = useNavigate();
+
+  const handleDeleteCourse = useHandleDeleteCourse();
+
+  const handleDeleteData = () => {
+    handleDeleteCourse(selectedRows, navigate, "/my-courses");
+    setIsDeletingCourses(false);
+  };
+
+  const { data: firstData } = useCourseList(
+    1,
+    10000,
+    undefined,
+    undefined,
+    undefined,
+    true
+  );
+  const { data } = useCourseList(
+    undefined,
+    10000,
+    sortColumn ? sortColumn : undefined,
+    sort ? sort : undefined,
+    searchText ? searchText : undefined,
+    true
+  );
 
   const dataToRender = () => {
     if (isAllCourses) {
@@ -72,78 +97,25 @@ const MyCoursesPages = () => {
   };
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const getCourses = await getCourseListAPI(
-          1,
-          1000,
-          undefined,
-          undefined,
-          undefined,
-          true
-        );
-        const getActiveCourses = getCourses.teacherCourseDtos.filter(
-          (course) => {
-            return course.isActive === true;
-          }
-        );
-        const getDeletedCourses = getCourses.teacherCourseDtos.filter(
-          (course) => {
-            return course.isdelete === true;
-          }
-        );
-        const getOpenCourses = getCourses.teacherCourseDtos.filter((course) => {
-          return course.statusName == "در حال برگذاری";
-        });
+    if (firstData) {
+      const getActiveCourses = firstData.teacherCourseDtos.filter((course) => {
+        return course.isActive === true;
+      });
+      const getDeletedCourses = firstData.teacherCourseDtos.filter((course) => {
+        return course.isdelete === true;
+      });
+      const getOpenCourses = firstData.teacherCourseDtos.filter((course) => {
+        return course.statusName == "درحال برگزاری";
+      });
 
-        setAllCourses(getCourses.teacherCourseDtos);
-        setActiveCourses(getActiveCourses);
-        setDeletedCourses(getDeletedCourses);
-        setOpenCourses(getOpenCourses);
-      } catch (error) {
-        toast.error("مشکلی در دریافت دوره ها به وجود آمد !");
-      }
-    };
+      setCourses(firstData.teacherCourseDtos);
+      setActiveCourses(getActiveCourses);
+      setDeletedCourses(getDeletedCourses);
+      setOpenCourses(getOpenCourses);
+    }
 
-    fetchCourses();
-  }, []);
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const getCourses = await getCourseListAPI(
-          undefined,
-          1000,
-          sort ? sort : undefined,
-          sortColumn ? sortColumn : undefined,
-          searchText ? searchText : undefined,
-          true
-        );
-        const getActiveCourses = getCourses.teacherCourseDtos.filter(
-          (course) => {
-            return course.isActive === true;
-          }
-        );
-        const getDeletedCourses = getCourses.teacherCourseDtos.filter(
-          (course) => {
-            return course.isdelete === true;
-          }
-        );
-        const getOpenCourses = getCourses.teacherCourseDtos.filter((course) => {
-          return course.statusName == "در حال برگذاری";
-        });
-
-        setAllCourses(getCourses.teacherCourseDtos);
-        setActiveCourses(getActiveCourses);
-        setDeletedCourses(getDeletedCourses);
-        setOpenCourses(getOpenCourses);
-      } catch (error) {
-        toast.error("مشکلی در دریافت دوره ها به وجود آمد !");
-      }
-    };
-
-    fetchCourses();
-  }, [searchText, sort, sortColumn]);
+    if (data) setAllCourses(data?.teacherCourseDtos);
+  }, [firstData, data]);
 
   return (
     <div className="invoice-list-wrapper">
@@ -159,7 +131,7 @@ const MyCoursesPages = () => {
               statTitle="همه دوره ها"
               icon={<Book />}
               renderStats={
-                <h3 className="fw-bolder mb-75">{allCourses?.length || 0}</h3>
+                <h3 className="fw-bolder mb-75">{courses?.length || 0}</h3>
               }
               onClick={() => {
                 setIsAllCourses(true);
@@ -245,12 +217,12 @@ const MyCoursesPages = () => {
           setSortColumn={setSortColumn}
           setSelectedRows={setSelectedRows}
           selectableRows
-          handleDeleteData={() =>
-            handleDeleteCourse(selectedRows, navigate, "/my-courses")
-          }
+          handleDeleteData={handleDeleteData}
           isCourseCreateButtonShow
           notFoundText="دوره ای پیدا نشد !"
           deleteSelectedRowsText="حذف یا بازگرادنی"
+          isDeletingData={isDeletingCourses}
+          setIsDeletingData={setIsDeletingCourses}
         />
       </Card>
     </div>

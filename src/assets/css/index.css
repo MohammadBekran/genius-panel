@@ -8,6 +8,10 @@
   width: 100%;
 }
 
+.brand-logo {
+  margin-top: -4px;
+}
+
 /* Editor JS */
 .ce-block__content {
   max-width: 800px;

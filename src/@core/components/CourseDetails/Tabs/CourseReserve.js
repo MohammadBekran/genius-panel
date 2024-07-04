@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
 
 // ** Core Imports
-import { getCourseReserveWithIdAPI } from "../../../../core/services/api/course/course-reserve/get-course-reserve-with-id.api";
+import { getCourseReserveWithIdAPI } from "../../../../core/services/api/course/course-reserve/useCourseReserveWithId";
 
 // ** Third Party Components
 import DataTable from "react-data-table-component";

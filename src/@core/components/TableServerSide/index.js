@@ -47,6 +47,8 @@ const DataTableServerSide = ({
   deleteSelectedRowsText,
   handleSearchFilter,
   selectableRows,
+  isDeletingData,
+  setIsDeletingData,
 }) => {
   // ** States
   const [itemOffset, setItemOffset] = useState(0);
@@ -119,8 +121,13 @@ const DataTableServerSide = ({
   const onSelectedRows = async (e) => {
     setSelectedRows(e.selectedRows);
     setIsDeleting(e.selectedRows);
-    if (e.selectedRows?.length !== 0) setIsDeleting(true);
-    else setIsDeleting(false);
+    if (e.selectedRows?.length !== 0) {
+      setIsDeleting(true);
+      setIsDeletingData(true);
+    } else {
+      setIsDeleting(false);
+      setIsDeletingData(false);
+    }
   };
 
   return (
@@ -131,7 +138,7 @@ const DataTableServerSide = ({
             {renderTitle}
           </CardTitle>
           <div className="d-flex gap-1">
-            {isDeleting && (
+            {isDeleting && isDeletingData && (
               <Button
                 className="d-flex align-items-center delete-course-btn"
                 onClick={handleDeleteData}

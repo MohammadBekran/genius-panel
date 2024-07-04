@@ -54,9 +54,11 @@ export const COURSE_RESERVED_COMMON_COLUMNS = (redirectUrl) => [
             getCourseDetail.teacherId,
             row.courseId
           );
+
+          console.log(getCourseGroup);
           const sendReserveToCourse = await sendReserveToCourseAPI(
             row.courseId,
-            getCourseGroup[0].groupId,
+            getCourseGroup.length === 0 ? undefined : getCourseGroup[0].groupId,
             row.studentId
           );
 
@@ -67,6 +69,7 @@ export const COURSE_RESERVED_COMMON_COLUMNS = (redirectUrl) => [
             toast.error(sendReserveToCourse.ErrorMessage);
           }
         } catch (error) {
+          console.log(error);
           toast.error("مشکلی در تایید رزرو دوره به وجود آمد !");
         }
       };

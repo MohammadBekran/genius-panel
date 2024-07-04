@@ -25,11 +25,11 @@ import {
 } from "react-feather";
 
 // ** Core Imports
-import { getCourseReserveWithIdAPI } from "../../../core/services/api/course/course-reserve/get-course-reserve-with-id.api";
+import { getCourseReserveWithIdAPI } from "../../../core/services/api/course/course-reserve/useCourseReserveWithId";
 
 // ** Util Imports
-import { handleActiveInactiveCourse } from "../../../utility/active-inactive-course.utils";
-import { handleDeleteCourse } from "../../../utility/delete-course-alert.utils";
+import { useHandleActiveInactiveCourse } from "../../../utility/active-inactive-course.utils";
+import { useHandleDeleteCourse } from "../../../utility/delete-course-alert.utils";
 import { persianNumberFormatter } from "../../../utility/persian-number-formatter-helper";
 
 // ** Custom Components
@@ -78,14 +78,14 @@ export const COURSE_COLUMNS = (redirectUrl) => [
     sortField: "fullName",
     cell: (row) => (
       <div className="mr-5">
-        <span className="text-sm">{row?.fullName}</span>
+        <span className="text-sm text-truncate">{row?.fullName}</span>
       </div>
     ),
   },
   {
     name: "قیمت",
     sortable: true,
-    minWidth: "140px",
+    minWidth: "70px",
     sortField: "cost",
     cell: (row) => {
       const formattedPrice = persianNumberFormatter(row.cost) || 0;
@@ -96,7 +96,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   {
     name: "وضعیت برگزاری",
     sortable: true,
-    minWidth: "140px",
+    minWidth: "120px",
     sortField: "statusName",
     cell: (row) => (
       <span className="course-column-truncate course-column-status">
@@ -107,11 +107,13 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   {
     sortable: true,
     name: "وضعیت",
-    minWidth: "120px",
+    minWidth: "10px",
     sortField: "active",
     cell: (row) => {
       // ** Hooks
       const navigate = useNavigate();
+
+      const handleActiveInactiveCourse = useHandleActiveInactiveCourse();
 
       return (
         <Badge
@@ -140,9 +142,11 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   {
     sortable: true,
     name: "وضعیت حذف",
-    minWidth: "130px",
+    minWidth: "110px",
     sortField: "isdelete",
     cell: (row) => {
+      const handleDeleteCourse = useHandleDeleteCourse();
+
       return (
         <Badge
           color={
@@ -162,7 +166,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   },
   {
     name: "عملیات",
-    minWidth: "160px",
+    minWidth: "152px",
     cell: (row) => {
       // ** States
       const [modal, setModal] = useState(null);
@@ -170,6 +174,9 @@ export const COURSE_COLUMNS = (redirectUrl) => [
 
       // ** Hooks
       const navigate = useNavigate();
+
+      const handleActiveInactiveCourse = useHandleActiveInactiveCourse();
+      const handleDeleteCourse = useHandleDeleteCourse();
 
       // ** Toggle modal function
       const toggleModal = (id) => {

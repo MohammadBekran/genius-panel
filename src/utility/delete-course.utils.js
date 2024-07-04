@@ -1,35 +1,18 @@
-// ** React Imports
-import toast from "react-hot-toast";
-
 // ** Core Imports
-import { deleteCourseAPI } from "../core/services/api/course/delete-course.api";
+import { useDeleteCourse } from "../core/services/api/course/useDeleteCourse";
 
-export const handleDeleteCourse = async (
-  selectedRows,
-  navigate,
-  redirectUrl
-) => {
-  try {
+export const useHandleDeleteCourse = () => {
+  const deleteCourseAPI = useDeleteCourse();
+
+  const handleDeleteCourse = async (selectedRows) => {
+    console.log(selectedRows);
     selectedRows.map(async (course) => {
-      const deleteCourse = await deleteCourseAPI(
-        course.isdelete,
-        course.courseId
-      );
-
-      if (deleteCourse.success) {
-        toast.success(
-          `دوره با موفقیت ${course.isdelete ? "بازگردانی" : "حذف"} شد !`
-        );
-
-        navigate(redirectUrl);
-      } else
-        toast.error(
-          `مشکلی در ${
-            course.isdelete ? "بازگردانی" : "حذف"
-          } دوره به وجود آمد ...`
-        );
+      deleteCourseAPI.mutate({
+        active: course.isdelete,
+        id: course.courseId,
+      });
     });
-  } catch (error) {
-    toast.error("مشکلی در حذف یا بازگردانی دوره به وجود آمد ...");
-  }
+  };
+
+  return handleDeleteCourse;
 };
