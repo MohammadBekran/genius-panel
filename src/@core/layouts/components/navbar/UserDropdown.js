@@ -1,6 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // ** Redux Imports
@@ -22,7 +21,7 @@ import {
 } from "reactstrap";
 
 // ** Core Imports
-import { getProfileInfoAPI } from "../../../../core/services/api/user-panel/get-profile-info.api";
+import { useProfileInfo } from "../../../../core/services/api/user-panel/useProfileInfo";
 import { removeItem } from "../../../../core/services/common/storage.services";
 
 // ** Default Avatar Image
@@ -30,14 +29,14 @@ import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg";
 
 const UserDropdown = () => {
   // ** State
-  const [profileInfo, setProfileInfo] = useState({
-    fName: "ادمین",
-    lName: "",
-    currentPictureAddress: defaultAvatar,
-  });
+  const { data: profileInfo } = useProfileInfo();
 
   // ** Hooks
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (profileInfo) dispatch(onUserChange(profileInfo));
+  }, [profileInfo]);
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -46,21 +45,6 @@ const UserDropdown = () => {
   const handleLogout = async () => {
     removeItem("token");
   };
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const getProfileInfo = await getProfileInfoAPI();
-
-        setProfileInfo(getProfileInfo);
-        dispatch(onUserChange(getProfileInfo));
-      } catch (error) {
-        toast.error("مشکلی در دریافت اطلاعات شما به وجود آمد !");
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
 
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
