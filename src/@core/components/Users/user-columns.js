@@ -256,6 +256,7 @@ export const USER_COLUMNS = [
             id={row.id}
             toggleModal={toggleModal}
             redirectUrl="/users"
+            userRoles={row.userRoles}
           />
         </div>
       );

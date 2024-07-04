@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
@@ -8,39 +6,29 @@ import { Button, Label, Modal, ModalBody, ModalHeader } from "reactstrap";
 
 // ** Core Imports
 import { USER_ROLES } from "../../../core/data/user-roles.data";
-import { addUserAccessAPI } from "../../../core/services/api/user/add-user-access.api";
+import { useAddUserAccess } from "../../../core/services/api/user/useAddUserAccess.api";
 
 // ** Utils
 import { selectThemeColors } from "../../../utility/Utils";
 
-const UserAddRole = ({ modal, id, toggleModal, redirectUrl }) => {
+const UserAddRole = ({ modal, id, toggleModal, userRoles }) => {
   // ** States
   const [role, setRole] = useState();
 
   // ** Hooks
-  const navigate = useNavigate();
+  const addUserAccess = useAddUserAccess(id);
 
   const animatedComponents = makeAnimated();
 
   const handleAddRole = async () => {
-    try {
-      const changeRole = await addUserAccessAPI(true, role, id);
+    const convertedUserRoles = userRoles.split(",").map((role) => role.trim());
 
-      if (changeRole.success) {
-        toast.success("دسترسی با موفقیت تغییر کرد !");
+    const handleEnable = convertedUserRoles.includes(role.role);
 
-        navigate(redirectUrl);
-      } else {
-        const addRole = await addUserAccessAPI(false, role, id);
-        if (addRole.success) {
-          toast.success("دسترسی با موفقیت تغییر کرد !");
-
-          navigate(redirectUrl);
-        }
-      }
-    } catch (error) {
-      toast.error("مشکلی در تغییر دسترسی به وجود آمد !");
-    }
+    addUserAccess.mutate({
+      enable: !handleEnable,
+      roleId: role.value,
+    });
   };
 
   return (
@@ -64,7 +52,7 @@ const UserAddRole = ({ modal, id, toggleModal, redirectUrl }) => {
           isClearable
           isSearchable
           components={animatedComponents}
-          onChange={(e) => setRole(e?.value)}
+          onChange={(e) => setRole(e)}
         />
         <Button
           color="primary"
