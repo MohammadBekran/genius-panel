@@ -12,12 +12,14 @@ export const useDeleteCourse = () => {
   return useMutation({
     mutationKey: ["deleteCourse"],
     mutationFn: async (data) =>
-      await http.delete("/Course/DeleteCourse", {
-        data: {
-          active: !data.active,
-          id: data.id,
-        },
-      }),
+      await http
+        .delete("/Course/DeleteCourse", {
+          data: {
+            active: !data.active,
+            id: data.id,
+          },
+        })
+        .then((res) => res.data),
     onSuccess: (data, deletedData) => {
       showSuccessToast(
         `دوره با موفقیت ${deletedData.active ? "بازگردانی" : "حذف"} شد !`

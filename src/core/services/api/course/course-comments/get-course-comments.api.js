@@ -4,7 +4,7 @@ export const getCourseCommentsAPI = async (courseId) => {
   try {
     const response = await http.get(`/Course/GetCourseCommnets/${courseId}`);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

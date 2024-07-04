@@ -22,7 +22,7 @@ export const teacherCommentManagementAPI = async (
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

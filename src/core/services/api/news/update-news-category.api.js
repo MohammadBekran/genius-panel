@@ -4,7 +4,7 @@ export const updateNewsCategoryAPI = async (data) => {
   try {
     const response = await http.put("/News/UpdateNewsCategory", data);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

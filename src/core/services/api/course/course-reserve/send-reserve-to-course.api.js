@@ -12,7 +12,7 @@ export const sendReserveToCourseAPI = async (
       studentId,
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

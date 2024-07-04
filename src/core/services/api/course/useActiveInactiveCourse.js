@@ -6,16 +6,18 @@ import {
 } from "../../../../utility/toast.utils";
 import http from "../../interceptor";
 
-export const useActiveInactiveCourse = async () => {
+export const useActiveInactiveCourse = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["activeInactiveCourse"],
     mutationFn: async (data) =>
-      await http.put("/Course/ActiveAndDeactiveCourse", {
-        active: data.active,
-        id: data.id,
-      }),
+      await http
+        .put("/Course/ActiveAndDeactiveCourse", {
+          active: data.active,
+          id: data.id,
+        })
+        .then((res) => res.data),
     onSuccess: (data, deletedData) => {
       showSuccessToast(
         `دوره با موفقیت ${deletedData.active ? "فعال" : "غیرفعال"} شد !`
@@ -28,8 +30,7 @@ export const useActiveInactiveCourse = async () => {
         queryKey: ["teacherCourseList"],
       });
     },
-    onError: (error) => {
-      console.log(error);
+    onError: () => {
       showErrorToast("مشکلی در فعال یا غیرفعال کردن دوره به وجود آمد !");
     },
   });

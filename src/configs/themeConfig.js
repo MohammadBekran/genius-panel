@@ -1,5 +1,5 @@
 // Logo Import
-import logo from "../assets/images/common/icons8-student-80 1.svg";
+import logo from "../assets/images/common/logo.svg";
 
 // You can customize the template with the help of this file
 

@@ -4,7 +4,7 @@ export const getNewsCategoryListsAPI = async () => {
   try {
     const response = await http.get("/News/GetListNewsCategory");
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

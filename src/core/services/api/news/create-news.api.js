@@ -8,7 +8,7 @@ export const createNewsAPI = async (data) => {
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

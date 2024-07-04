@@ -18,7 +18,7 @@ export const addNewsReplyCommentAPI = async (
       parentId,
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

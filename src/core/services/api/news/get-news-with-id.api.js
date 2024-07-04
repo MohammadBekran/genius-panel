@@ -4,7 +4,7 @@ export const getNewsWithIdAPI = async (id) => {
   try {
     const response = await http.get(`/News/${id}`);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

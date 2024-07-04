@@ -19,19 +19,21 @@ export const useCourseList = (
       query,
     ],
     queryFn: async () =>
-      await http.get(
-        `${
-          isTeacherCourse ? "/Course/TeacherCourseList" : "/Course/CourseList"
-        }`,
-        {
-          params: {
-            pageNumber,
-            rowsOfPage,
-            sortingCol,
-            sortType,
-            query,
-          },
-        }
-      ),
+      await http
+        .get(
+          `${
+            isTeacherCourse ? "/Course/TeacherCourseList" : "/Course/CourseList"
+          }`,
+          {
+            params: {
+              pageNumber,
+              rowsOfPage,
+              sortingCol,
+              sortType,
+              query,
+            },
+          }
+        )
+        .then((res) => res.data),
   });
 };

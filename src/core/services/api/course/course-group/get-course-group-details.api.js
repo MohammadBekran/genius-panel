@@ -8,7 +8,7 @@ export const getCourseGroupDetailsAPI = async (id) => {
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

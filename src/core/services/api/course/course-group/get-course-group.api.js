@@ -9,7 +9,7 @@ export const getCourseGroupAPI = async (teacherId, courseId) => {
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

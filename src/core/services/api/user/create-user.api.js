@@ -20,7 +20,7 @@ export const createUserAPI = async (
       isTeacher,
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

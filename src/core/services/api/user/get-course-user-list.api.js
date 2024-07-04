@@ -20,7 +20,7 @@ export const getCourseListAPI = async (
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

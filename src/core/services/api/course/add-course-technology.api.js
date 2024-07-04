@@ -7,7 +7,7 @@ export const addCourseTechnologyAPI = async (courseId, technologies) => {
       technologies
     );
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

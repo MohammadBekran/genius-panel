@@ -20,7 +20,7 @@ export const adminNewsFilterListAPI = async (
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

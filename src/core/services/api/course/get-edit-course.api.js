@@ -8,7 +8,7 @@ export const getEditCourseAPI = async (courseId) => {
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

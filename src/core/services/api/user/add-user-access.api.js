@@ -15,7 +15,7 @@ export const addUserAccessAPI = async (enable, roleId, userId) => {
       }
     );
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

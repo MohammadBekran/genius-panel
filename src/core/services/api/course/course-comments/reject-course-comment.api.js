@@ -8,7 +8,7 @@ export const rejectCourseCommentAPI = async (commentCourseId) => {
       },
     });
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

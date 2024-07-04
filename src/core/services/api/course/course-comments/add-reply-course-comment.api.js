@@ -4,7 +4,7 @@ export const addReplyCommentAPI = async (comment) => {
   try {
     const response = await http.post("/Course/AddReplyCourseComment", comment);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

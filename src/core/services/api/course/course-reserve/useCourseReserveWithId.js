@@ -4,7 +4,7 @@ export const getCourseReserveWithIdAPI = async (courseId) => {
   try {
     const response = await http.get(`/CourseReserve/${courseId}`);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }

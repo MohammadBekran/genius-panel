@@ -4,7 +4,7 @@ export const getUserWithIdAPI = async (userId) => {
   try {
     const response = await http.get(`/User/UserDetails/${userId}`);
 
-    return response;
+    return response.data;
   } catch (error) {
     return false;
   }
