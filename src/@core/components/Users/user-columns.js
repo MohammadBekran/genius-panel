@@ -40,7 +40,13 @@ import { renderRoleName } from "../../../utility/render-role-name-helper.utils";
 
 // ** Renders Client Columns
 const renderClient = (row) => {
-  if (row.pictureAddress) {
+  if (
+    row.pictureAddress &&
+    row.pictureAddress !== "undefined" &&
+    row.pictureAddress !== "Not-set" &&
+    row.pictureAddress !== "not-set" &&
+    row.pictureAddress !== "<string>"
+  ) {
     return (
       <Avatar
         className="me-1"
@@ -55,7 +61,10 @@ const renderClient = (row) => {
         initials
         className="me-1"
         color={"light-primary"}
-        content={row.fname + " " + row.lname || "کاربر نابغه"}
+        content={
+          row?.fname?.slice(0, 1) + " " + row?.lname?.slice(0, 1) ||
+          "کاربر نابغه"
+        }
       />
     );
   }
@@ -105,9 +114,7 @@ const statusObj = {
 export const USER_COLUMNS = [
   {
     name: "کاربر",
-    sortable: true,
     minWidth: "300px",
-    sortField: "fname",
     selector: (row) => row.fullName,
     cell: (row) => (
       <div className="d-flex justify-content-left align-items-center">
@@ -130,24 +137,20 @@ export const USER_COLUMNS = [
   },
   {
     name: "نقش",
-    sortable: true,
-    width: "155px",
-    sortField: "role",
+    minWidth: "155px",
     selector: (row) => row.role,
     cell: (row) => renderRole(row),
   },
   {
     name: "شماره موبایل",
-    width: "150px",
-    sortable: true,
-    sortField: "phoneNumber",
+    minWidth: "150px",
     cell: (row) => <span className="text-capitalize">{row.phoneNumber}</span>,
   },
   {
     name: "تاریخ",
-    width: "130px",
+    minWidth: "130px",
     sortable: true,
-    sortField: "billing",
+    sortField: "insertDate",
     selector: (row) => row.billing,
     cell: (row) => {
       const formattedDate = convertDateToPersian(row.insertDate);
@@ -157,19 +160,19 @@ export const USER_COLUMNS = [
   },
   {
     name: "وضعیت",
-    width: "120px",
+    minWidth: "120px",
     sortable: true,
     sortField: "active",
     selector: (row) => row.active,
     cell: (row) => (
-      <Badge className="text-capitalize" color={statusObj[row.active]} pill>
+      <Badge className="text-capitalize" color={statusObj[row.active]}>
         {row.active ? "فعال" : "غیرفعال"}
       </Badge>
     ),
   },
   {
     name: "عملیات",
-    minWidth: "240px",
+    minWidth: "178px",
     cell: (row) => {
       // ** States
       const [modal, setModal] = useState(null);

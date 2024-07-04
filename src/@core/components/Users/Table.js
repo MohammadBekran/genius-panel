@@ -169,6 +169,7 @@ const BootstrapCheckbox = forwardRef((props, ref) => (
 
 const UsersListTable = ({
   users,
+  isLoading,
   rowsOfPage,
   currentPage,
   query,
@@ -214,18 +215,23 @@ const UsersListTable = ({
       <ReactPaginate
         previousLabel={""}
         nextLabel={""}
+        breakLabel="..."
         pageCount={count || 1}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={2}
         activeClassName="active"
         forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={(page) => handlePagination(page)}
-        pageClassName={"page-item"}
-        nextLinkClassName={"page-link"}
-        nextClassName={"page-item next"}
-        previousClassName={"page-item prev"}
-        previousLinkClassName={"page-link"}
-        pageLinkClassName={"page-link"}
+        pageClassName="page-item"
+        breakClassName="page-item"
+        nextLinkClassName="page-link"
+        pageLinkClassName="page-link"
+        breakLinkClassName="page-link"
+        previousLinkClassName="page-link"
+        nextClassName="page-item next-item"
+        previousClassName="page-item prev-item"
         containerClassName={
-          "pagination react-paginate justify-content-end my-2 pe-1"
+          "pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1"
         }
       />
     );
@@ -233,22 +239,27 @@ const UsersListTable = ({
 
   // ** Table data to render
   const dataToRender = () => {
-    const filters = {
-      role: currentRole.value,
-      status: currentStatus.value,
-      query,
-    };
-
-    const isFiltered = Object.keys(filters).some(function (k) {
-      return filters[k]?.length > 0;
-    });
-
-    if (users?.length > 0) {
-      return users;
-    } else if (users?.totalCount === 0 && isFiltered) {
-      return [];
+    console.log(isLoading);
+    if (isLoading) {
+      return [{ label: "Loading ..." }];
     } else {
-      return users?.listUser?.slice(0, rowsOfPage);
+      const filters = {
+        role: currentRole.value,
+        status: currentStatus.value,
+        query,
+      };
+
+      const isFiltered = Object.keys(filters).some(function (k) {
+        return filters[k]?.length > 0;
+      });
+
+      if (users?.length > 0) {
+        return users;
+      } else if (users?.totalCount === 0 && isFiltered) {
+        return [];
+      } else {
+        return users?.listUser?.slice(0, rowsOfPage);
+      }
     }
   };
 

@@ -1,6 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 
 // ** User List Component
 import UsersListTable from "../@core/components/Users/Table";
@@ -16,18 +15,13 @@ import BreadCrumbs from "../@core/components/breadcrumbs";
 import { User, UserCheck, UserPlus, UserX } from "react-feather";
 
 // ** Core Imports
-import { getUserListsAPI } from "../core/services/api/user/get-user-lists.api";
+import { useUserLists } from "../core/services/api/user/useUserLists.api";
 
 // ** Styles
 import "@styles/react/apps/app-users.scss";
 
 const Users = () => {
-  const [allUsers, setAllUsers] = useState();
-  const [userLists, setUserLists] = useState();
-  const [students, setStudents] = useState();
-  const [teachers, setTeachers] = useState();
-  const [admins, setAdmins] = useState();
-  const [currentPage, setCurrentPage] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [rowsOfPage, setRowsOfPage] = useState(10);
   const [query, setQuery] = useState();
   const [sortingCol, setSortingCol] = useState("DESC");
@@ -41,63 +35,56 @@ const Users = () => {
     label: "انتخاب وضعیت",
   });
 
-  const fetchUserLists = async (roleId, setData) => {
-    try {
-      const getUserLists = await getUserListsAPI(
-        1,
-        rowsOfPage,
-        "desc",
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        roleId
-      );
-
-      setData(getUserLists);
-    } catch (error) {
-      toast.error("مشکلی در دریافت کاربران به وجود آمد !");
-    }
-  };
-
-  useEffect(() => {
-    fetchUserLists(undefined, setUserLists);
-    fetchUserLists(undefined, setAllUsers);
-    fetchUserLists(5, setStudents);
-    fetchUserLists(2, setTeachers);
-    fetchUserLists(1, setAdmins);
-  }, []);
-
-  useEffect(() => {
-    const fetchUserLists = async () => {
-      try {
-        const getUserLists = await getUserListsAPI(
-          currentPage,
-          rowsOfPage,
-          sortingCol,
-          sortType,
-          query,
-          currentStatus.value === true ? true : undefined,
-          currentStatus.value === false ? true : undefined,
-          currentRole.value || undefined
-        );
-
-        setUserLists(getUserLists);
-      } catch (error) {
-        toast.error("مشکلی در دریافت کاربران به وجود آمد !");
-      }
-    };
-
-    fetchUserLists();
-  }, [
+  const { data: allUsers } = useUserLists(
+    1,
     rowsOfPage,
+    "desc",
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined
+  );
+  const { data: userLists, isLoading } = useUserLists(
     currentPage,
-    sortingCol,
+    rowsOfPage,
     sortType,
+    sortingCol,
     query,
-    currentRole,
-    currentStatus,
-  ]);
+    currentStatus.value === true ? true : undefined,
+    currentStatus.value === false ? true : undefined,
+    currentRole.value || undefined
+  );
+  const { data: students } = useUserLists(
+    1,
+    rowsOfPage,
+    "desc",
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    5
+  );
+  const { data: teachers } = useUserLists(
+    1,
+    rowsOfPage,
+    "desc",
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    2
+  );
+  const { data: admins } = useUserLists(
+    1,
+    rowsOfPage,
+    "desc",
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    1
+  );
 
   return (
     <div className="app-user-list">
@@ -152,6 +139,7 @@ const Users = () => {
       </Row>
       <UsersListTable
         users={userLists}
+        isLoading={isLoading}
         rowsOfPage={rowsOfPage}
         currentPage={currentPage}
         query={query}
