@@ -16,7 +16,7 @@ import Avatar from "@components/avatar";
 import UserAddRole from "../UserAddRole";
 
 // ** Core Imports
-import { deleteUserAPI } from "../../../core/services/api/user/delete-user.api";
+import { deleteUserAPI } from "../../../core/services/api/user/useDeleteUser.api";
 
 // ** Utils
 import { convertDateToPersian } from "../../../utility/date-helper.utils";

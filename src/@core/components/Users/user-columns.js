@@ -1,7 +1,6 @@
 // ** React Imports
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -32,7 +31,7 @@ import {
 } from "reactstrap";
 
 // ** Core Imports
-import { deleteUserAPI } from "../../../core/services/api/user/delete-user.api";
+import { useDeleteUser } from "../../../core/services/api/user/useDeleteUser.api";
 
 // ** Utils
 import { convertDateToPersian } from "../../../utility/date-helper.utils";
@@ -177,8 +176,8 @@ export const USER_COLUMNS = [
       // ** States
       const [modal, setModal] = useState(null);
 
-      // ** Hook
-      const navigate = useNavigate();
+      // ** Hooks
+      const deleteUser = useDeleteUser(row.id);
 
       // ** Toggle modal function
       const toggleModal = (id) => {
@@ -212,14 +211,8 @@ export const USER_COLUMNS = [
           confirmButtonText: "بله،کاربر را حذف میکنم",
           cancelButtonText: "انصراف",
           showLoaderOnConfirm: true,
-          async preConfirm() {
-            const deleteUser = await deleteUserAPI(row.id);
-
-            if (deleteUser) {
-              toast.success(`کاربر با موفقیت حذف شد !`);
-
-              navigate("/users");
-            } else toast.error("مشکلی در حذف کاربر به وجود آمد !");
+          preConfirm() {
+            deleteUser.mutate();
           },
         });
       };

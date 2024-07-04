@@ -1,11 +1,11 @@
 import { toast } from "react-hot-toast";
 
 const showLoadingToast = (message, id) => {
-  toast.loading(message, { toastId: id });
+  toast.loading(message, { id });
 };
 
 const dismissToast = (id) => {
-  dismiss(id);
+  toast.dismiss(id);
 };
 
 const showSuccessToast = (message) => {
