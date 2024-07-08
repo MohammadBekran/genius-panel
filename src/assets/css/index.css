@@ -357,6 +357,31 @@ body.dark-layout .swal2-html-container#swal2-html-container {
   color: #d0d2d6;
 }
 
+body.dark-layout .rmdp-wrapper.rmdp-shadow {
+  background: #283046;
+}
+
+body.dark-layout .rmdp-shadow {
+  box-shadow: 0 0 5px #92929257;
+}
+body.dark-layout .rmdp-day,
+body.dark-layout .rmdp-header-values {
+  color: #fff;
+}
+
+body.dark-layout .rmdp-ep-arrow:after {
+  background-color: #283046;
+  border-color: #283046 !important;
+}
+
+body.dark-layout .rmdp-ep-arrow[direction="bottom"] {
+  border-color: #283046 !important;
+}
+
+body.dark-layout .rmdp-ep-shadow:after {
+  box-shadow: 0 0 6px #8798ad63;
+}
+
 /* Responsive */
 @media (max-width: 1000px) {
   .course-reserve-filters {

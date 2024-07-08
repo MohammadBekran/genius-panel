@@ -126,12 +126,6 @@ const GlobalData = ({
     }
   }, [course, setValue]);
 
-  useEffect(() => {
-    if (title && cost && capacity && sessionNumber && miniDescribe) {
-      stepper.next();
-    }
-  }, [title, cost, capacity, sessionNumber, miniDescribe, startTime, endTime]);
-
   return (
     <Fragment>
       <div className="content-header">
