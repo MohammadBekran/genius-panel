@@ -1,7 +1,5 @@
 // ** React Imports
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Import
 import { Badge, Tooltip } from "reactstrap";
