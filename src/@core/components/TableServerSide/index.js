@@ -118,6 +118,7 @@ const DataTableServerSide = ({
     setSortColumn(column.sortField);
   };
 
+  // ** Function to handle selected rows
   const onSelectedRows = async (e) => {
     setSelectedRows(e.selectedRows);
     setIsDeleting(e.selectedRows);

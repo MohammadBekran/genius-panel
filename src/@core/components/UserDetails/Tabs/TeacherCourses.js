@@ -1,32 +1,54 @@
 // ** React Imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 
 // ** Reactstrap Imports
-import { Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
+import { Button, Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
 
 // ** Core Imports
+import { useCourseList } from "../../../../core/services/api/course/useCourseList";
 
 // ** Third Party Components
 import DataTable from "react-data-table-component";
-import { ChevronDown } from "react-feather";
+import { ChevronDown, Trash } from "react-feather";
 
 // ** Columns
-import { USER_FAVORITE_COURSES_COLUMNS } from "./user-favorite-courses-columns";
+import { COURSE_COLUMNS } from "../../course-columns";
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
-const UserCourses = ({ userCourses }) => {
+const TeacherCourses = ({ userName }) => {
   // ** States
-  const [currentPage, setCurrentPage] = useState(0);
+  const [teacherCourses, setTeacherCourses] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [itemOffset, setItemOffset] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
+  // ** Hooks
+  const { data: courses, isLoading } = useCourseList(
+    1,
+    100000,
+    undefined,
+    undefined,
+    undefined,
+    false
+  );
+
+  useEffect(() => {
+    if (courses) {
+      const getTeacherCourses = courses.courseDtos.filter(
+        (course) => course.fullName === userName
+      );
+
+      setTeacherCourses(getTeacherCourses);
+    }
+  }, [courses, userName]);
+
   const endOffset = itemOffset + rowsPerPage;
-  const currentItems = userCourses?.slice(itemOffset, endOffset);
+  const currentItems = teacherCourses?.slice(itemOffset, endOffset);
 
   // ** Function to handle filter
   const handleFilter = (e) => {
@@ -35,12 +57,14 @@ const UserCourses = ({ userCourses }) => {
     setSearchValue(value);
 
     if (value.length) {
-      updatedData = userCourses.filter((reserve) => {
-        const startsWith = reserve.title
+      setCurrentPage(1);
+
+      updatedData = teacherCourses.filter((teacherCourse) => {
+        const startsWith = teacherCourse.title
           .toLowerCase()
           .startsWith(value.toLowerCase());
 
-        const includes = reserve.title
+        const includes = teacherCourse.title
           .toLowerCase()
           .includes(value.toLowerCase());
 
@@ -58,7 +82,10 @@ const UserCourses = ({ userCourses }) => {
   // ** Function to handle Pagination
   const handlePagination = (event) => {
     setCurrentPage(event.selected + 1);
-    const newOffset = (event.selected * rowsPerPage) % userCourses?.length;
+    const newOffset = (event.selected * rowsPerPage) % teacherCourses?.length;
+
+    console.log("currentPage", currentPage);
+    console.log("teacherCourses", teacherCourses);
 
     setItemOffset(newOffset);
   };
@@ -90,7 +117,7 @@ const UserCourses = ({ userCourses }) => {
         pageCount={
           searchValue.length
             ? Math.ceil(filteredData.length / rowsPerPage)
-            : Math.ceil(userCourses.length / rowsPerPage) || 1
+            : Math.ceil(teacherCourses.length / rowsPerPage) || 1
         }
         onPageChange={(page) => handlePagination(page)}
         containerClassName="pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1"
@@ -100,11 +127,11 @@ const UserCourses = ({ userCourses }) => {
 
   return (
     <Card>
-      <CardHeader tag="h4">دوره های کاربر</CardHeader>
+      <CardHeader tag="h4">دوره های استاد</CardHeader>
       <div className="react-dataTable user-view-account-projects">
-        {userCourses?.length === 0 ? (
+        {teacherCourses?.length === 0 ? (
           <span className="no-user-course-reserve-found-text">
-            دوره ای برای این کاربر پیدا نشد !
+            این استاد هنوز دوره ای ثبت نکرده است !
           </span>
         ) : (
           <>
@@ -152,14 +179,16 @@ const UserCourses = ({ userCourses }) => {
               pagination
               paginationServer
               data={searchValue.length ? filteredData : currentItems}
-              columns={USER_FAVORITE_COURSES_COLUMNS}
+              columns={COURSE_COLUMNS()}
               className="react-dataTable"
               sortIcon={<ChevronDown size={10} />}
               paginationComponent={CustomPagination}
               paginationDefaultPage={currentPage + 1}
               noDataComponent={
                 <span className="my-2">
-                  دوره ی تایید شده ای برای این کاربر پیدا نشد !
+                  {isLoading
+                    ? "در حال دریافت دوره های استاد ..."
+                    : "دوره ای برای این استاد پیدا نشد !"}
                 </span>
               }
             />
@@ -170,4 +199,4 @@ const UserCourses = ({ userCourses }) => {
   );
 };
 
-export default UserCourses;
+export default TeacherCourses;

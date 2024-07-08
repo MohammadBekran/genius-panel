@@ -1,6 +1,4 @@
 // ** React Imports
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 // ** Reactstrap Imports
@@ -15,12 +13,13 @@ import {
 import { Edit, Eye, MoreVertical } from "react-feather";
 
 // ** Core Imports
+import { useCourseById } from "../../../core/services/api/course/useCourseById.api";
 
 // ** Utils
+import { showErrorToast } from "../../../utility/toast.utils";
 
 // ** Image Imports
 import blankThumbnail from "../../../assets/images/common/blank-thumbnail.jpg";
-import { getCourseByIdAPI } from "../../../core/services/api/course/get-course-by-id.api";
 
 // ** Table columns
 export const COURSE_GROUPS_COLUMNS = [
@@ -30,22 +29,10 @@ export const COURSE_GROUPS_COLUMNS = [
     width: "210px",
     sortField: "groupName",
     cell: (row) => {
-      // ** States
-      const [course, setCourse] = useState();
+      // ** Hooks
+      const { data: course, error } = useCourseById(row.courseId);
 
-      useEffect(() => {
-        const fetchCourse = async () => {
-          try {
-            const getCourse = await getCourseByIdAPI(row.courseId);
-
-            setCourse(getCourse);
-          } catch (error) {
-            toast.error("مشکلی در دریافت دوره گروه به وجود آمد !");
-          }
-        };
-
-        fetchCourse();
-      }, []);
+      if (error) showErrorToast("مشکلی در دریافت دوره گروه به وجود آمد !");
 
       return (
         <div className="d-flex justify-content-left align-items-center gap-1">

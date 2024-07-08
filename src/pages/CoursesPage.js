@@ -44,10 +44,10 @@ const CoursesPage = () => {
   const [selectedRows, setSelectedRows] = useState();
   const [isDeletingCourses, setIsDeletingCourses] = useState(false);
 
-  const { data: firstData } = useCourseList(1, 10000);
+  const { data: firstData } = useCourseList(1, 100000);
   const { data } = useCourseList(
     undefined,
-    10000,
+    100000,
     sortColumn ? sortColumn : undefined,
     sort ? sort : undefined,
     searchText ? searchText : undefined,
@@ -57,8 +57,8 @@ const CoursesPage = () => {
   const handleDeleteCourse = useHandleDeleteCourse();
 
   const handleDeleteData = () => {
-    handleDeleteCourse(selectedRows);
     setIsDeletingCourses(false);
+    handleDeleteCourse(selectedRows);
   };
 
   const dataToRender = () => {
@@ -198,7 +198,7 @@ const CoursesPage = () => {
       <Card className="rounded">
         <TableServerSide
           data={dataToRender()}
-          columns={COURSE_COLUMNS("/courses", dataToRender)}
+          columns={COURSE_COLUMNS("/courses")}
           renderTitle={renderTitle()}
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}

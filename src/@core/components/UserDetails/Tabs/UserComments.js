@@ -1,6 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useParams } from "react-router-dom";
 
@@ -8,71 +7,63 @@ import { useParams } from "react-router-dom";
 import { Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
 
 // ** Core Imports
-import { getCourseReserveWithIdAPI } from "../../../../core/services/api/course/course-reserve/useCourseReserveWithId";
+import { useAdminCommentManagement } from "../../../../core/services/api/comment/useAdminCommentManagement.api";
+
+// ** Utility
+import { useTimeOut } from "../../../../utility/hooks/useTimeOut";
 
 // ** Third Party Components
 import DataTable from "react-data-table-component";
 import { ChevronDown } from "react-feather";
 
 // ** Columns
-import { COURSE_RESERVED_COLUMNS } from "../../course-columns/course-reserved-columns";
+import { USER_COMMENTS_COLUMNS } from "./user-comments-columns";
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
-const CourseReserve = () => {
+const UserComments = () => {
   // ** States
-  const [courseReserve, setCourseReserve] = useState();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemOffset, setItemOffset] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [sortComments, setSortComments] = useState(true);
+  const [query, setQuery] = useState("");
 
   // ** Hooks
   const { id } = useParams();
+  const textTimeOut = useTimeOut();
 
-  const endOffset = itemOffset + rowsPerPage;
-  const currentItems = courseReserve?.slice(itemOffset, endOffset);
+  const { data, isLoading } = useAdminCommentManagement(
+    currentPage,
+    rowsPerPage,
+    undefined,
+    undefined,
+    query ? query : undefined,
+    sortComments,
+    id
+  );
 
   // ** Function to handle filter
   const handleFilter = (e) => {
-    const value = e.target.value;
-    let updatedData = [];
-    setSearchValue(value);
-
-    if (value.length) {
-      updatedData = courseReserve.filter((reserve) => {
-        const startsWith = reserve.studentName
-          .toLowerCase()
-          .startsWith(value.toLowerCase());
-
-        const includes = reserve.studentName
-          .toLowerCase()
-          .includes(value.toLowerCase());
-
-        if (startsWith) {
-          return startsWith;
-        } else if (!startsWith && includes) {
-          return includes;
-        } else return null;
-      });
-      setFilteredData(updatedData);
-      setSearchValue(value);
-    }
+    setSearchValue(e.target.value);
+    setCurrentPage(1);
+    textTimeOut(() => setQuery(e.target.value), 800);
   };
 
   // ** Function to handle Pagination
   const handlePagination = (event) => {
     setCurrentPage(event.selected + 1);
-    const newOffset = (event.selected * rowsPerPage) % courseReserve?.length;
-
-    setItemOffset(newOffset);
   };
 
   // ** Function to handle per page
   const handlePerPage = (e) => {
     setRowsPerPage(parseInt(e.target.value));
+  };
+
+  // ** Function to handle sort comments
+  const handleSortComments = (e) => {
+    setSortComments(e.target.value);
   };
 
   // ** Custom Pagination
@@ -94,35 +85,16 @@ const CourseReserve = () => {
         previousLinkClassName="page-link"
         nextClassName="page-item next-item"
         previousClassName="page-item prev-item"
-        pageCount={
-          searchValue.length
-            ? Math.ceil(filteredData.length / rowsPerPage)
-            : Math.ceil(courseReserve.length / rowsPerPage) || 1
-        }
+        pageCount={Math.ceil(data.totalCount / rowsPerPage) || 1}
         onPageChange={(page) => handlePagination(page)}
         containerClassName="pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1"
       />
     );
   };
 
-  // ** Get Course Reserve
-  useEffect(() => {
-    const fetchCourseReserve = async () => {
-      try {
-        const getCourseReserve = await getCourseReserveWithIdAPI(id);
-
-        setCourseReserve(getCourseReserve);
-      } catch (error) {
-        toast.error("مشکلی در دریافت رزرو های این دوره به وجود آمد !");
-      }
-    };
-
-    fetchCourseReserve();
-  }, []);
-
   return (
     <Card>
-      <CardHeader tag="h4">رزرو کنندگان دوره</CardHeader>
+      <CardHeader tag="h4">نظرات کاربر</CardHeader>
       <div className="react-dataTable user-view-account-projects">
         <Row className="justify-content-end align-items-center mx-0 course-reserve-filters">
           <Col md="6" sm="12">
@@ -133,7 +105,7 @@ const CourseReserve = () => {
                 type="select"
                 id="sort-select"
                 value={rowsPerPage}
-                onChange={(e) => handlePerPage(e)}
+                onChange={handlePerPage}
               >
                 <option value={5}>5</option>
                 <option value={7}>7</option>
@@ -163,20 +135,42 @@ const CourseReserve = () => {
             />
           </Col>
         </Row>
+        <Row className="course-reserve-filters user-comments-sort-accepted-row">
+          <Col md="9" sm="12" className="user-comments-sort-accepted-wrapper">
+            <Label for="sort-select">مرتب سازی نظرات</Label>
+            <Input
+              className="dataTable-select user-comments-sort-accepted-select-box"
+              type="select"
+              id="sort-select"
+              value={sortComments}
+              onChange={handleSortComments}
+            >
+              <option value={true}>تایید شده</option>
+              <option value={false}>تایید نشده</option>
+            </Input>
+          </Col>
+        </Row>
         <DataTable
           noHeader
           pagination
-          data={searchValue.length ? filteredData : currentItems}
-          columns={COURSE_RESERVED_COLUMNS()}
+          paginationServer
+          data={data?.comments}
+          columns={USER_COMMENTS_COLUMNS}
           className="react-dataTable"
           sortIcon={<ChevronDown size={10} />}
           paginationComponent={CustomPagination}
           paginationDefaultPage={currentPage + 1}
-          noDataComponent={<p className="my-1">رزروی برای این دوره پیدا نشد</p>}
+          noDataComponent={
+            <span className="my-2">
+              {isLoading
+                ? "در حال دریافت نظرات کاربر"
+                : " نظری برای این کاربر پیدا نشد !"}
+            </span>
+          }
         />
       </div>
     </Card>
   );
 };
 
-export default CourseReserve;
+export default UserComments;

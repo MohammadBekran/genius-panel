@@ -1,3 +1,21 @@
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(123, 123, 123, 0.249);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(66, 66, 66, 0.718);
+}
+
 .coursesRowsPerPageSelectBox {
   line-height: 1.5rem;
 }
@@ -315,6 +333,28 @@ body.dark-layout
 
 .dashboard-card-medal-congratulations-text {
   width: 180px;
+}
+
+.user-comments-sort-accepted-row {
+  margin-bottom: 30px;
+}
+
+.user-comments-sort-accepted-select-box {
+  width: 100px !important;
+  margin: 0;
+  margin-top: 2px;
+}
+
+.user-comments-sort-accepted-wrapper {
+  margin-left: 15px;
+}
+
+body.dark-layout .swal2-popup {
+  background-color: #283046;
+}
+
+body.dark-layout .swal2-html-container#swal2-html-container {
+  color: #d0d2d6;
 }
 
 /* Responsive */

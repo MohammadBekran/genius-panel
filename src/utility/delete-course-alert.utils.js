@@ -31,13 +31,11 @@ export const useHandleDeleteCourse = () => {
       confirmButtonText: isDeleted ? "بازگردانی" : "حذف",
       cancelButtonText: "انصراف",
       showLoaderOnConfirm: true,
-      async preConfirm() {
-        const deleteCourse = deleteCourseAPI.mutate({
+      preConfirm() {
+        deleteCourseAPI.mutate({
           active: isDeleted,
           id: courseId,
         });
-
-        console.log(deleteCourse);
       },
     });
   };

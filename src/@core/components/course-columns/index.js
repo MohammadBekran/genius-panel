@@ -166,7 +166,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   },
   {
     name: "عملیات",
-    minWidth: "152px",
+    minWidth: "160px",
     cell: (row) => {
       // ** States
       const [modal, setModal] = useState(null);
@@ -272,7 +272,6 @@ export const COURSE_COLUMNS = (redirectUrl) => [
               toggleModal={toggleModal}
               modal={modal}
               courseReserve={courseReserve}
-              redirectUrl={redirectUrl}
             />
           </div>
         </div>
