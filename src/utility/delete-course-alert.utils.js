@@ -32,11 +32,37 @@ export const useHandleDeleteCourse = () => {
       cancelButtonText: "انصراف",
       showLoaderOnConfirm: true,
       preConfirm() {
-        deleteCourseAPI.mutate({
-          active: isDeleted,
-          id: courseId,
+        return new Promise((resolve) => {
+          deleteCourseAPI.mutate(
+            {
+              active: isDeleted,
+              id: courseId,
+            },
+            {
+              onSuccess: () => {
+                MySwal.fire({
+                  title: `دوره با موفقیت ${isDeleted ? "بازگردانی" : "حذف"} شد`,
+                  icon: "success",
+                  confirmButtonText: "باشه",
+                });
+                resolve();
+              },
+              onError: () => {
+                MySwal.fire({
+                  title: `مشکلی در ${
+                    isDeleted ? "بازگردانی" : "حذف"
+                  } دوره به وجود آمد`,
+                  icon: "error",
+                  confirmButtonText: "باشه",
+                });
+                resolve();
+              },
+            }
+          );
         });
       },
+      focusCancel: true,
+      focusConfirm: true,
     });
   };
 

@@ -26,6 +26,7 @@ const CourseReservedModal = ({
   toggleModal,
   modal,
   courseReserve,
+  isLoading,
 }) => {
   // ** States
   const [currentPage, setCurrentPage] = useState(0);
@@ -44,7 +45,7 @@ const CourseReservedModal = ({
     setSearchValue(value);
 
     if (value.length) {
-      updatedData = courseReserve.filter((reserve) => {
+      updatedData = courseReserve?.filter((reserve) => {
         const startsWith = reserve.studentName
           .toLowerCase()
           .startsWith(value.toLowerCase());
@@ -109,6 +110,7 @@ const CourseReservedModal = ({
 
   return (
     <Modal
+      scrollable
       isOpen={modal === id}
       toggle={() => toggleModal(id)}
       className="modal-dialog-centered modal-lg"
@@ -119,7 +121,11 @@ const CourseReservedModal = ({
       </ModalHeader>
       <ModalBody>
         {courseReserve?.length === 0 ? (
-          <span>رزروی برای این دوره پیدا نشد</span>
+          <span className="d-block text-center loading-empty-course-reserve-modal-text">
+            {isLoading
+              ? "در حال دریافت رزرو های این دوره ..."
+              : "رزروی برای این دوره پیدا نشد"}
+          </span>
         ) : (
           <>
             <Row className="justify-content-end align-items-center mx-0 course-reserve-filters">

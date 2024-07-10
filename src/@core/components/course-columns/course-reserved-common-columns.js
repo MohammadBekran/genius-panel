@@ -77,7 +77,7 @@ export const COURSE_RESERVED_COMMON_COLUMNS = (isUserDetailsPage) => [
             <div className="d-flex gap-2">
               <div>
                 <Check
-                  className="cursor-pointer"
+                  className="cursor-pointer outline-none"
                   id="ChangeCourseReserveToStudentCourse"
                   onClick={handleChangeCourseReserveToStudentCourse}
                 />
@@ -95,7 +95,7 @@ export const COURSE_RESERVED_COMMON_COLUMNS = (isUserDetailsPage) => [
               </div>
               <div>
                 <X
-                  className="cursor-pointer"
+                  className="cursor-pointer outline-none"
                   id="deleteCourseReserve"
                   onClick={handleDeleteCourseReserve}
                 />

@@ -382,6 +382,10 @@ body.dark-layout .rmdp-ep-shadow:after {
   box-shadow: 0 0 6px #8798ad63;
 }
 
+.loading-empty-course-reserve-modal-text {
+  margin: 4px 0;
+}
+
 /* Responsive */
 @media (max-width: 1000px) {
   .course-reserve-filters {

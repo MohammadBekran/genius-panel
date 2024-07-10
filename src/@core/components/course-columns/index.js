@@ -1,7 +1,6 @@
 // ** React Imports
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // ** Reactstrap Imports
 import {
@@ -25,7 +24,7 @@ import {
 } from "react-feather";
 
 // ** Core Imports
-import { getCourseReserveWithIdAPI } from "../../../core/services/api/course/course-reserve/useCourseReserveWithId";
+import { useCourseReserveWithId } from "../../../core/services/api/course/course-reserve/useCourseReserveWithId";
 
 // ** Util Imports
 import { useHandleActiveInactiveCourse } from "../../../utility/active-inactive-course.utils";
@@ -39,7 +38,7 @@ import CourseReservedModal from "./CourseReservedModal";
 import blankThumbnail from "../../../assets/images/common/blank-thumbnail.jpg";
 
 // ** Table columns
-export const COURSE_COLUMNS = (redirectUrl) => [
+export const COURSE_COLUMNS = [
   {
     name: "نام دوره",
     sortable: true,
@@ -111,8 +110,6 @@ export const COURSE_COLUMNS = (redirectUrl) => [
     sortField: "active",
     cell: (row) => {
       // ** Hooks
-      const navigate = useNavigate();
-
       const handleActiveInactiveCourse = useHandleActiveInactiveCourse();
 
       return (
@@ -125,14 +122,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
               : "light-warning"
           }
           className="course-column-badge cursor-pointer"
-          onClick={() =>
-            handleActiveInactiveCourse(
-              row.isActive,
-              row.courseId,
-              navigate,
-              redirectUrl
-            )
-          }
+          onClick={() => handleActiveInactiveCourse(row.isActive, row.courseId)}
         >
           {row.isActive ? "فعال" : "غیر فعال"}
         </Badge>
@@ -166,15 +156,14 @@ export const COURSE_COLUMNS = (redirectUrl) => [
   },
   {
     name: "عملیات",
-    minWidth: "160px",
+    minWidth: "152px",
     cell: (row) => {
       // ** States
       const [modal, setModal] = useState(null);
-      const [courseReserve, setCourseReserve] = useState();
 
       // ** Hooks
-      const navigate = useNavigate();
-
+      const { data: courseReserve, isLoading: isCourseReserveLoading } =
+        useCourseReserveWithId(row.courseId);
       const handleActiveInactiveCourse = useHandleActiveInactiveCourse();
       const handleDeleteCourse = useHandleDeleteCourse();
 
@@ -187,26 +176,13 @@ export const COURSE_COLUMNS = (redirectUrl) => [
         }
       };
 
-      const fetchCourseReserve = async () => {
-        try {
-          const getCourseReserve = await getCourseReserveWithIdAPI(
-            row.courseId
-          );
-
-          setCourseReserve(getCourseReserve);
-        } catch (error) {
-          toast.error("مشکلی در دریافت لیست رزرو دوره به وجود آمد ...");
-        }
-      };
-
-      const handleCourseReserveClick = () => {
-        fetchCourseReserve();
+      const handleCourseReserveClick = async () => {
         toggleModal(row.courseId);
       };
 
       return (
         <div className="column-action d-flex align-items-center gap-1">
-          <UncontrolledDropdown>
+          <UncontrolledDropdown direction="top">
             <DropdownToggle tag="span">
               <MoreVertical size={17} className="cursor-pointer" />
             </DropdownToggle>
@@ -243,12 +219,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
               <DropdownItem
                 className="w-100"
                 onClick={() =>
-                  handleActiveInactiveCourse(
-                    row.isActive,
-                    row.courseId,
-                    navigate,
-                    redirectUrl
-                  )
+                  handleActiveInactiveCourse(row.isActive, row.courseId)
                 }
               >
                 {row.isActive ? (
@@ -272,6 +243,7 @@ export const COURSE_COLUMNS = (redirectUrl) => [
               toggleModal={toggleModal}
               modal={modal}
               courseReserve={courseReserve}
+              isLoading={isCourseReserveLoading}
             />
           </div>
         </div>

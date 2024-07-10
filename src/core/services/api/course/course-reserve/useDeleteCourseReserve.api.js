@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import http from "../../../interceptor";
 import {
   dismissToast,
   showErrorToast,
   showLoadingToast,
   showSuccessToast,
 } from "../../../../../utility/toast.utils";
+import http from "../../../interceptor";
 
 export const useDeleteCourseReserve = (id) => {
   const queryClient = useQueryClient();
@@ -28,8 +28,12 @@ export const useDeleteCourseReserve = (id) => {
 
       if (data.success) {
         showSuccessToast("رزرو با موفقیت حذف شد !");
+
         queryClient.invalidateQueries({
           queryKey: ["userDetails"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["courseReserveWithId"],
         });
       } else showErrorToast("مشکلی در حذف رزرو به وجود آمد !");
     },

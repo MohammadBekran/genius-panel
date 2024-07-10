@@ -34,6 +34,10 @@ export const useSendReserveToCourse = () => {
 
       if (data.success) {
         showSuccessToast("رزرو با موفقیت تایید شد !");
+
+        queryClient.invalidateQueries({
+          queryKey: ["courseReserveWithId"],
+        });
         queryClient.invalidateQueries({
           queryKey: ["userDetails"],
         });

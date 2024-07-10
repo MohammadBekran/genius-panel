@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 
 // ** Reactstrap Imports
-import { Button, Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
+import { Card, CardHeader, Col, Input, Label, Row } from "reactstrap";
 
 // ** Core Imports
 import { useCourseList } from "../../../../core/services/api/course/useCourseList";
 
 // ** Third Party Components
 import DataTable from "react-data-table-component";
-import { ChevronDown, Trash } from "react-feather";
+import { ChevronDown } from "react-feather";
 
 // ** Columns
 import { COURSE_COLUMNS } from "../../course-columns";
@@ -179,7 +179,7 @@ const TeacherCourses = ({ userName }) => {
               pagination
               paginationServer
               data={searchValue.length ? filteredData : currentItems}
-              columns={COURSE_COLUMNS()}
+              columns={COURSE_COLUMNS}
               className="react-dataTable"
               sortIcon={<ChevronDown size={10} />}
               paginationComponent={CustomPagination}
