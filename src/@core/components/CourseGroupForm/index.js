@@ -13,7 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import Breadcrumbs from "@components/breadcrumbs";
 
 // ** Core Imports
-import { addCourseGroupAPI } from "../../../core/services/api/course/course-group/add-course-group.api";
+import { useAddCourseGroup } from "../../../core/services/api/course/course-group/useAddCourseGroup.api";
 import { updateCourseGroupAPI } from "../../../core/services/api/course/course-group/update-course-group.api";
 import { useCourseList } from "../../../core/services/api/course/useCourseList";
 import { courseGroupFormSchema } from "../../../core/validations/course-group-form.validation";
@@ -65,6 +65,7 @@ const CourseGroupForm = ({ group }) => {
     resolver: yupResolver(courseGroupFormSchema),
   });
   const navigate = useNavigate();
+  const addCourseGroup = useAddCourseGroup();
 
   const { data: courseList } = useCourseList(1, 100000);
 
@@ -83,7 +84,7 @@ const CourseGroupForm = ({ group }) => {
 
       const sendCourseGroup = group
         ? await updateCourseGroupAPI(data)
-        : await addCourseGroupAPI(data);
+        : addCourseGroup.mutate(data);
 
       if (sendCourseGroup.success) {
         toast.success(`گروه با موفقیت ${group ? "ویرایش" : "ایجاد"} شد !`);

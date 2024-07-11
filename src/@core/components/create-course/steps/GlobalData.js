@@ -26,11 +26,6 @@ import FileUploaderSingle from "../../FileUploaderSingle";
 const GlobalData = ({
   stepper,
   course,
-  title,
-  cost,
-  capacity,
-  sessionNumber,
-  miniDescribe,
   startTime,
   endTime,
   setTitle,
