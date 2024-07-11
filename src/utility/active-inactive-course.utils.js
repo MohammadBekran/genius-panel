@@ -15,9 +15,9 @@ export const useHandleActiveInactiveCourse = () => {
       title: isActive
         ? "آیا از غیر فعال دوره مطمئن هستید؟"
         : "آیا از فعال دوره مطمئن هستید ؟",
-      text: `آیا از ${
+      text: `در صورت مطمئن بودن از ${
         isActive ? "غیر فعال" : "فعال"
-      } کردن دوره اطمینان کامل دارید ؟`,
+      } کردن دوره این کار را انجام دهید`,
       icon: "warning",
       customClass: {
         confirmButton: "btn btn-primary",

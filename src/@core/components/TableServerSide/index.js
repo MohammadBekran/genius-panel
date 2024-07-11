@@ -208,7 +208,7 @@ const DataTableServerSide = ({
             selectableRows={selectableRows}
             selectableRowsComponent={BootstrapCheckbox}
             onSelectedRowsChange={onSelectedRows}
-            noDataComponent={<p>{notFoundText}</p>}
+            noDataComponent={<span>{notFoundText}</span>}
           />
         </div>
       </Card>

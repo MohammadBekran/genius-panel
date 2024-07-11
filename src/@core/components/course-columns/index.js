@@ -44,31 +44,37 @@ export const COURSE_COLUMNS = [
     sortable: true,
     minWidth: "180px",
     sortField: "title",
-    cell: (row) => (
-      <div className="d-flex justify-content-left align-items-center gap-1">
-        <img
-          src={
-            !row.tumbImageAddress ||
-            row.tumbImageAddress === "undefined" ||
-            row.tumbImageAddress === "<string>"
-              ? blankThumbnail
-              : row.tumbImageAddress
-          }
-          className="course-column-image"
-        />
-        <div className="d-flex flex-column">
-          <Link
-            to={`/courses/${row.courseId}`}
-            className="course-column-truncate text-body"
-          >
-            <span className="fw-bolder text-primary">{row.title}</span>
-          </Link>
-          <small className="text-truncate text-muted mb-0">
-            {row.typeName}
-          </small>
+    cell: (row) => {
+      // ** States
+      const [courseImageSrc, setCourseImageSrc] = useState(
+        !row.tumbImageAddress ||
+          row.tumbImageAddress === "undefined" ||
+          row.tumbImageAddress === "<string>"
+          ? blankThumbnail
+          : row.tumbImageAddress
+      );
+
+      return (
+        <div className="d-flex justify-content-left align-items-center gap-1">
+          <img
+            src={courseImageSrc}
+            onError={() => setCourseImageSrc(blankThumbnail)}
+            className="course-column-image"
+          />
+          <div className="d-flex flex-column">
+            <Link
+              to={`/courses/${row.courseId}`}
+              className="course-column-truncate text-body"
+            >
+              <span className="fw-bolder text-primary">{row.title}</span>
+            </Link>
+            <small className="text-truncate text-muted mb-0">
+              {row.typeName}
+            </small>
+          </div>
         </div>
-      </div>
-    ),
+      );
+    },
   },
   {
     name: "نام مدرس",
