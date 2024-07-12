@@ -36,7 +36,8 @@ const CourseReservedPage = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   // ** Hooks
-  const { data: courseReserve } = useCourseReserve();
+  const { data: courseReserve, isLoading: isCourseReserveLoading } =
+    useCourseReserve();
 
   const dataToRender = () => {
     console.log(allReserves);
@@ -179,7 +180,11 @@ const CourseReservedPage = () => {
           setCurrentPage={setCurrentPage}
           setRowsPerPage={setRowsPerPage}
           setSearchValue={setSearchText}
-          notFoundText="رزروی پیدا نشد !"
+          loadingNotFoundText={
+            isCourseReserveLoading
+              ? "در حال دریافت رزرو ها ..."
+              : "رزروی پیدا نشد !"
+          }
           handleSearchFilter={handleFilter}
         />
       </Card>

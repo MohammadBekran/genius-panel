@@ -43,7 +43,7 @@ const DataTableServerSide = ({
   setSelectedRows,
   handleDeleteData,
   isCourseCreateButtonShow,
-  notFoundText,
+  loadingNotFoundText,
   deleteSelectedRowsText,
   handleSearchFilter,
   selectableRows,
@@ -133,7 +133,7 @@ const DataTableServerSide = ({
 
   return (
     <Fragment>
-      <Card>
+      <Card className="dataTableCard">
         <CardHeader className="d-flex justify-content-between align-items-center border-bottom">
           <CardTitle tag="h4" className="tableTitle">
             {renderTitle}
@@ -208,7 +208,7 @@ const DataTableServerSide = ({
             selectableRows={selectableRows}
             selectableRowsComponent={BootstrapCheckbox}
             onSelectedRowsChange={onSelectedRows}
-            noDataComponent={<span>{notFoundText}</span>}
+            noDataComponent={<span>{loadingNotFoundText}</span>}
           />
         </div>
       </Card>

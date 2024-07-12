@@ -40,7 +40,8 @@ const MyCoursesPages = () => {
   const [isOpenCourses, setIsOpenCourses] = useState(false);
   const [isDeletingCourses, setIsDeletingCourses] = useState(false);
 
-  const { data: firstData } = useCourseList(
+  // ** Hooks
+  const { data: firstData, isLoading: isFirstDataLoading } = useCourseList(
     1,
     10000,
     undefined,
@@ -48,7 +49,7 @@ const MyCoursesPages = () => {
     undefined,
     true
   );
-  const { data } = useCourseList(
+  const { data, isLoading: isDataLoading } = useCourseList(
     undefined,
     10000,
     sortColumn ? sortColumn : undefined,
@@ -201,7 +202,11 @@ const MyCoursesPages = () => {
           setSort={setSort}
           setSortColumn={setSortColumn}
           isCourseCreateButtonShow
-          notFoundText="دوره ای پیدا نشد !"
+          loadingNotFoundText={
+            isFirstDataLoading || isDataLoading
+              ? "در حال دریافت دوره ها ..."
+              : "دوره ای پیدا نشد !"
+          }
           deleteSelectedRowsText="حذف یا بازگرادنی"
           isDeletingData={isDeletingCourses}
           setIsDeletingData={setIsDeletingCourses}

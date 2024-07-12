@@ -386,6 +386,10 @@ body.dark-layout .rmdp-ep-shadow:after {
   margin: 4px 0;
 }
 
+.dataTableCard {
+  margin-bottom: 19px;
+}
+
 /* Editor JS */
 .cdx-search-field__input {
   margin-top: 3.8px;

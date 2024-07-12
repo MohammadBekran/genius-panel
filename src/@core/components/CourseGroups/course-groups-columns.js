@@ -24,10 +24,8 @@ import blankThumbnail from "../../../assets/images/common/blank-thumbnail.jpg";
 // ** Table columns
 export const COURSE_GROUPS_COLUMNS = [
   {
-    name: "نام گروه",
-    sortable: true,
-    width: "210px",
-    sortField: "groupName",
+    name: "نام دوره",
+    minWidth: "300px",
     cell: (row) => {
       // ** Hooks
       const { data: course, error } = useCourseById(row.courseId);
@@ -48,10 +46,10 @@ export const COURSE_GROUPS_COLUMNS = [
           />
           <div className="d-flex flex-column">
             <Link
-              to={`/course-groups/${row.groupId}`}
+              to={`/courses/${row.courseId}`}
               className="course-column-truncate blog-column-truncate text-body"
             >
-              <span className="fw-bolder text-primary">{row.groupName}</span>
+              <span className="fw-bolder text-primary">{row.courseName}</span>
             </Link>
           </div>
         </div>
@@ -59,10 +57,19 @@ export const COURSE_GROUPS_COLUMNS = [
     },
   },
   {
-    name: "نام استاد",
+    name: "نام گروه",
     sortable: true,
-    width: "200px",
-    sortField: "teacherName",
+    minWidth: "180px",
+    sortField: "groupName",
+    cell: (row) => (
+      <Link to={`/course-groups/${row.groupId}`} className="text-truncate">
+        {row.groupName}
+      </Link>
+    ),
+  },
+  {
+    name: "نام استاد",
+    minWidth: "190px",
     cell: (row) => (
       <div className="d-flex justify-content-left align-items-center gap-1">
         <div className="d-flex flex-column">
@@ -72,35 +79,21 @@ export const COURSE_GROUPS_COLUMNS = [
     ),
   },
   {
-    name: "نام دوره",
-    sortable: true,
-    width: "270px",
-    sortField: "courseName",
-    cell: (row) => <span>{row.courseName}</span>,
-  },
-  {
     name: "ظرفیت گروه",
-    sortable: true,
-    width: "140px",
-    sortField: "groupCapacity",
+    minWidth: "80px",
     cell: (row) => <span>{row.groupCapacity}</span>,
   },
   {
     name: "ظرفیت دوره",
-    sortable: true,
-    width: "140px",
-    sortField: "courseCapacity",
+    minWidth: "80px",
     cell: (row) => <span>{row.courseCapacity}</span>,
   },
   {
     name: "عملیات",
-    minWidth: "160px",
+    minWidth: "100px",
     cell: (row) => {
-      // ** Hooks
-      //   const navigate = useNavigate();
-
       return (
-        <div className="column-action d-flex align-items-center gap-1">
+        <div className="column-action d-flex align-items-center gap-1 mr-2">
           <UncontrolledDropdown>
             <DropdownToggle tag="span">
               <MoreVertical size={17} className="cursor-pointer" />
@@ -108,7 +101,7 @@ export const COURSE_GROUPS_COLUMNS = [
             <DropdownMenu end>
               <DropdownItem
                 tag={Link}
-                to={`/course-groups/edit/${row.groupId}`}
+                to={`/course-groups/${row.groupId}`}
                 className="w-100"
               >
                 <Eye size={14} className="me-50" />
